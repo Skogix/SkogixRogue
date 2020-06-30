@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Console = SadConsole.Console;
@@ -10,11 +11,11 @@ namespace GameUI
 	{
 		private const int Width = 80;
 		private const int Height = 25;
-		private static SadConsole.Entities.Entity player;
+		private static Player player;
 		
 		// array med tilebases som har alla tiles
 		private static TileBase[] _tiles;
-		private const int _testRoomWidth = 10;
+		private const int _testRoomWidth = 30;
 		private const int _testRoomHeight = 20;
 		
 		
@@ -42,15 +43,8 @@ namespace GameUI
 			// körs varje LOGISK update men hookat med frameupdate
 			// t.ex keypresses, toggles osv
 			// blir nog att calla logik här med
+			CheckKeyboard();
 
-			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
-				player.Position += new Point(0, -1);
-			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
-				player.Position += new Point(0, 1);
-			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
-				player.Position += new Point(-1, 0);
-			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
-				player.Position += new Point(1, 0);
 		}
 
 		private static void Init()
@@ -82,9 +76,7 @@ namespace GameUI
 		// ToDo: Kolla upp entities och hur lika dem är unity
 		private static void CreatePlayer()
 		{
-			player = new SadConsole.Entities.Entity(1, 1);
-			player.Animation.CurrentFrame[0].Glyph = '@';
-			player.Animation.CurrentFrame[0].Foreground = Color.HotPink;
+			player = new Player(Color.HotPink, Color.Transparent);
 			player.Position = new Point(20, 10);
 		}
 
@@ -114,6 +106,29 @@ namespace GameUI
 			{
 				_tiles[i] = new TileWall();
 			}
+		}
+
+		// skanna sadconsoles keyboardstate och gör shit beroende på knapp
+		private static void CheckKeyboard()
+		{
+			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework
+				.Input.Keys.Up))
+				player.MoveBy(new Point(0, -1));
+			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+				player.MoveBy(new Point(0, 1));
+			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+				player.MoveBy(new Point(-1, 0));
+			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+				player.MoveBy(new Point(1, 0));
+		}
+
+		public static bool IsTileWalkable(Point loc)
+		{
+			// kolla inom mapboundaries
+			if (loc.X < 0 || loc.Y < 0 || loc.X >= Width || loc.Y >= Height)
+				return false;
+			// sen returna om den är movable
+			return _tiles[loc.Y * Width + loc.X].IsBlockingMove == false;
 		}
 	}
 }

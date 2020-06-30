@@ -10,8 +10,8 @@ namespace GameUI
 		
 		protected string Name;
 		// movement och LoS
-		protected bool IsBlockingMove;
-		protected bool IsBlockingLoS;
+		public bool IsBlockingMove;
+		public bool IsBlockingLoS;
 		
 		// varje tilebase har en foreground/background-color och en glyph/token
 		
