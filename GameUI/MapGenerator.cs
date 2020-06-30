@@ -57,9 +57,57 @@ namespace GameUI
 			{
 				CreateRoom(room);
 			}
+			
+			// gå igenom hela listan och cutta ut en tunnel mellan rum 1-2, 2-3 osv
+			for (int i = 1; i < Rooms.Count; i++)
+			{
+				// hämta mitten av nuvarande rummet och förra rummet
+				Point previousRoomCenter = Rooms[i - 1].Center;
+				Point currentRoomCenter = Rooms[i].Center;
+				
+				// slumpa 50/50 vilket håll "L"-tunnelt ska "vika av"
+				// -------------|        | |
+				// -----------| |        | |
+				//            | |        | ---------
+				//            | |        |----------
+				// fooStart, fooEnd, cutAxis
+				if (random.Next(1, 2) == 1)
+				{
+					CreateHorizontalTunnel(previousRoomCenter.X, currentRoomCenter.X
+						, previousRoomCenter.Y);
+					CreateVerticalTunnel(previousRoomCenter.Y, currentRoomCenter.Y
+						, currentRoomCenter.X);
+				}
+				else
+				{
+					CreateVerticalTunnel(previousRoomCenter.Y, currentRoomCenter.Y
+						, previousRoomCenter.X);
+					CreateHorizontalTunnel(previousRoomCenter.X, currentRoomCenter.X
+						, currentRoomCenter.Y);
+				}
+			}
 
 			// spotta ut en hel karta
 			return _map;
+		}
+
+		// cutta ut en tunnel som går efter x-axis
+		private void CreateHorizontalTunnel(int xStart, int xEnd, int yCutPosition)
+		{
+			// loopa igenom från minsta till högsta nummer
+			for (int x = Math.Min(xStart,xEnd); x < Math.Max(xStart,xEnd); x++)
+			{
+				// samma x-axis men ny y-pos
+				CreateFloor(new Point(x, yCutPosition));
+			}
+		}
+
+		private void CreateVerticalTunnel(int yStart, int yEnd, int xCutPosition)
+		{
+			for (int y = Math.Min(yStart,yEnd); y < Math.Max(yStart,yEnd); y++)
+			{
+				CreateFloor(new Point(xCutPosition, y));
+			}
 		}
 
 		// fyll hela mappen med walls

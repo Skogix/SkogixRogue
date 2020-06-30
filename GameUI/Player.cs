@@ -8,7 +8,6 @@ namespace GameUI
 		public Player(Color foreground, Color background) : base(foreground
 			, background, '@')
 		{
-			
 		}
 	}
 }

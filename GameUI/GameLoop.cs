@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Console = SadConsole.Console;
 using SadConsole;
+using SadConsole.Components;
 
 namespace GameUI
 {
@@ -14,6 +15,7 @@ namespace GameUI
 		private const int Height = 40;
 		
 		private static Player player;
+		private static ScrollingConsole startingConsole;
 		public static Map GameMap;
 
 		// faktiskt mapstorleken
@@ -25,7 +27,7 @@ namespace GameUI
 		private static int _maxRoomSize = 25;
 		
 		
-		private static void Main()
+		static void Main()
 		{
 			// skapa mainwindow med engine
 			SadConsole.Game.Create(Width, Height);
@@ -49,6 +51,7 @@ namespace GameUI
 			// körs varje LOGISK update men hookat med frameupdate
 			// t.ex keypresses, toggles, viss logik(?) osv
 			CheckKeyboard();
+			CenterOnActor(player);
 
 		}
 
@@ -63,7 +66,7 @@ namespace GameUI
 				, _minRoomSize, _maxRoomSize);
 			
 			// skapa en console som använder tiles från gameMap
-			Console startingConsole = new ScrollingConsole(
+			startingConsole = new ScrollingConsole(
 				GameMap.Width, 
 				GameMap.Height, 
 				Global.FontDefault, 
@@ -75,6 +78,10 @@ namespace GameUI
 			
 			// skapa spelare
 			CreatePlayer();
+			
+			// lägg till EntityViewSyncComponent till player så viewporten syncas
+			player.Components.Add(new EntityViewSyncComponent());
+			
 			// lägg till spelare some child av nuvarande consolen
 			// VIKTIGT!
 			startingConsole.Children.Add(player);
@@ -85,21 +92,47 @@ namespace GameUI
 		private static void CreatePlayer()
 		{
 			player = new Player(Color.HotPink, Color.Transparent);
-			player.Position = new Point(5, 5);
+			player.Position = new Point(20, 20);
 		}
 
 		// skanna sadconsoles keyboardstate och gör shit beroende på knapp
 		private static void CheckKeyboard()
 		{
-			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework
-				.Input.Keys.Up))
+			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys
+				.Space))
+			{
+				Random random = new Random();
+				player.MoveTo(new Point(random.Next(Width - 1), random.Next(Height - 1)));
+			}
+			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+			{
 				player.MoveBy(new Point(0, -1));
+				// CenterOnActor(player);
+			}
+
 			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+			{
 				player.MoveBy(new Point(0, 1));
+				// CenterOnActor(player);
+			}
+
 			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+			{
 				player.MoveBy(new Point(-1, 0));
+				// CenterOnActor(player);
+			}
+
 			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+			{
 				player.MoveBy(new Point(1, 0));
+				// CenterOnActor(player);
+			}
+		}
+
+		// centrera viewporten på actor
+		public static void CenterOnActor(Actor actor)
+		{
+			startingConsole.CenterViewPortOnPoint(actor.Position);
 		}
 	}
 }
