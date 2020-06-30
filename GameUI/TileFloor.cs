@@ -15,7 +15,6 @@ namespace GameUI
 					blocksLoS)
 		{
 			Name = "Floor";
-			
 		}
 	}
 }

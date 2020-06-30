@@ -5,6 +5,7 @@ namespace GameUI
 {
 	public abstract class Actor : SadConsole.Entities.Entity
 	{
+		// exempelattribut
 		public int Health { get; set; }
 		public int MaxHealth { get; set; }
 
@@ -16,6 +17,7 @@ namespace GameUI
 			int height = 1)
 			: base(width, height)
 		{
+			// sadconsole har animationer så ändra bara första framen i animationen
 			Animation.CurrentFrame[0].Foreground = foreground;
 			Animation.CurrentFrame[0].Background = background;
 			Animation.CurrentFrame[0].Glyph = glyph;
@@ -26,7 +28,7 @@ namespace GameUI
 		public bool MoveBy(Point posChange)
 		{
 			// kolla mappen om vi kan gå
-			if (GameLoop.IsTileWalkable(Position + posChange))
+			if (GameLoop.GameMap.IsTileWalkable(Position + posChange))
 			{
 				Position += posChange;
 				return true;

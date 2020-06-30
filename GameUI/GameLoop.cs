@@ -9,14 +9,20 @@ namespace GameUI
 {
 	internal class GameLoop
 	{
+		// för viewPort / "camera-fov"
 		private const int Width = 80;
-		private const int Height = 25;
-		private static Player player;
+		private const int Height = 40;
 		
-		// array med tilebases som har alla tiles
-		private static TileBase[] _tiles;
-		private const int _testRoomWidth = 30;
-		private const int _testRoomHeight = 20;
+		private static Player player;
+		public static Map GameMap;
+
+		// faktiskt mapstorleken
+		private static int _mapWidth = 100;
+		private static int _mapHeight = 100;
+		// mapgeneration
+		private static int _maxRooms = 1000;
+		private static int _minRoomSize = 15;
+		private static int _maxRoomSize = 25;
 		
 		
 		private static void Main()
@@ -41,35 +47,37 @@ namespace GameUI
 		private static void Update(GameTime time)
 		{
 			// körs varje LOGISK update men hookat med frameupdate
-			// t.ex keypresses, toggles osv
-			// blir nog att calla logik här med
+			// t.ex keypresses, toggles, viss logik(?) osv
 			CheckKeyboard();
 
 		}
 
 		private static void Init()
 		{
-			// loada och preppa saker
+			// sätt en ny empty map
+			GameMap = new Map(_mapWidth, _mapHeight);
 			
-			// bygg väggar i hela rummet och sen lägg ut golv
-			CreateWalls();
-			CreateFloors();
+			// newa mapGenerator och kör
+			MapGenerator mapGen = new MapGenerator();
+			GameMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms
+				, _minRoomSize, _maxRoomSize);
 			
-			// scrollingconsole använder viewports och en "kamera" om följer något
+			// skapa en console som använder tiles från gameMap
 			Console startingConsole = new ScrollingConsole(
-				Width,
-				Height,
-				Global.FontDefault,
-				// använder viewPort (camera i unity)
-				new Rectangle(0, 0, Width, Height),
-				_tiles);
-			
-			// sätt den här konsollen till den som ska köras
+				GameMap.Width, 
+				GameMap.Height, 
+				Global.FontDefault, 
+				new Rectangle(0,0,Width,Height), // viewPorten
+				GameMap.Tiles);
+
+			// sätt startingConsole som currentScreen
 			SadConsole.Global.CurrentScreen = startingConsole;
-			// instansiera och adda till currentconsole
-			CreatePlayer();
-			startingConsole.Children.Add(player);
 			
+			// skapa spelare
+			CreatePlayer();
+			// lägg till spelare some child av nuvarande consolen
+			// VIKTIGT!
+			startingConsole.Children.Add(player);
 		}
 
 		// sadconsole har entities med point och andra values (tänk transform i unity)
@@ -77,58 +85,21 @@ namespace GameUI
 		private static void CreatePlayer()
 		{
 			player = new Player(Color.HotPink, Color.Transparent);
-			player.Position = new Point(20, 10);
-		}
-
-		private static void CreateFloors()
-		{
-			// kötta ut en rektangel med floors
-			for (int x = 0; x < _testRoomWidth; x++)
-			{
-				for (int y = 0; y < _testRoomHeight; y++)
-				{
-					// skapa en ny tile för varje position i 2dmatrix
-					// för att få ut en matrix från en endimensionell array med Width:
-					// y * Width + x
-					_tiles[y * Width + x] = new TileFloor(); 
-				}
-			}
-		}
-
-		private static void CreateWalls()
-		{
-			// array stor som mapsize
-			_tiles = new TileBase[Width * Height];
-			
-			// fyll med walls
-			// lär som "bas", vill inte ha nå null-skit från sadconsole
-			for (int i = 0; i < _tiles.Length; i++)
-			{
-				_tiles[i] = new TileWall();
-			}
+			player.Position = new Point(5, 5);
 		}
 
 		// skanna sadconsoles keyboardstate och gör shit beroende på knapp
 		private static void CheckKeyboard()
 		{
-			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework
+			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework
 				.Input.Keys.Up))
 				player.MoveBy(new Point(0, -1));
-			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
 				player.MoveBy(new Point(0, 1));
-			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
 				player.MoveBy(new Point(-1, 0));
-			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
 				player.MoveBy(new Point(1, 0));
-		}
-
-		public static bool IsTileWalkable(Point loc)
-		{
-			// kolla inom mapboundaries
-			if (loc.X < 0 || loc.Y < 0 || loc.X >= Width || loc.Y >= Height)
-				return false;
-			// sen returna om den är movable
-			return _tiles[loc.Y * Width + loc.X].IsBlockingMove == false;
 		}
 	}
 }
