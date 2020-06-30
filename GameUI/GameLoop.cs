@@ -98,8 +98,9 @@ namespace GameUI
 		// skanna sadconsoles keyboardstate och gör shit beroende på knapp
 		private static void CheckKeyboard()
 		{
-			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys
-				.Space))
+			// lättare att skapa en teleport än att faktiskt se till att man spawnar i 
+			// ett rum!
+			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
 			{
 				Random random = new Random();
 				player.MoveTo(new Point(random.Next(Width - 1), random.Next(Height - 1)));
