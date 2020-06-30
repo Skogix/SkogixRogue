@@ -6,7 +6,7 @@ using SadConsole;
 
 namespace GameUI
 {
-	internal class Program
+	internal class GameLoop
 	{
 		private const int Width = 80;
 		private const int Height = 25;
@@ -36,6 +36,15 @@ namespace GameUI
 			// körs varje LOGISK update men hookat med frameupdate
 			// t.ex keypresses, toggles osv
 			// blir nog att calla logik här med
+
+			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+				player.Position += new Point(0, -1);
+			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+				player.Position += new Point(0, 1);
+			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+				player.Position += new Point(-1, 0);
+			if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+				player.Position += new Point(1, 0);
 		}
 
 		private static void Init()
