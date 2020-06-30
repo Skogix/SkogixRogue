@@ -12,6 +12,12 @@ namespace GameUI
 		private const int Height = 25;
 		private static SadConsole.Entities.Entity player;
 		
+		// array med tilebases som har alla tiles
+		private static TileBase[] _tiles;
+		private const int _testRoomWidth = 10;
+		private const int _testRoomHeight = 20;
+		
+		
 		private static void Main()
 		{
 			// skapa mainwindow med engine
@@ -51,19 +57,19 @@ namespace GameUI
 		{
 			// loada och preppa saker
 			
-			// testfest
-			// console är nu "using" sadconsole.console
-			Console startingConsole = new Console(Width, Height);
+			// bygg väggar i hela rummet och sen lägg ut golv
+			CreateWalls();
+			CreateFloors();
 			
-			// startingConsole.FillWithRandomGarbage();
-			startingConsole.Fill(
-				new Rectangle(3, 3, 27, 5),
-				null,
-				Color.Black,
-				0,
-				SpriteEffects.None);
-			startingConsole.Print(5, 5, "Skogix!", ColorAnsi.CyanBright);
-
+			// scrollingconsole använder viewports och en "kamera" om följer något
+			Console startingConsole = new ScrollingConsole(
+				Width,
+				Height,
+				Global.FontDefault,
+				// använder viewPort (camera i unity)
+				new Rectangle(0, 0, Width, Height),
+				_tiles);
+			
 			// sätt den här konsollen till den som ska köras
 			SadConsole.Global.CurrentScreen = startingConsole;
 			// instansiera och adda till currentconsole
@@ -80,6 +86,34 @@ namespace GameUI
 			player.Animation.CurrentFrame[0].Glyph = '@';
 			player.Animation.CurrentFrame[0].Foreground = Color.HotPink;
 			player.Position = new Point(20, 10);
+		}
+
+		private static void CreateFloors()
+		{
+			// kötta ut en rektangel med floors
+			for (int x = 0; x < _testRoomWidth; x++)
+			{
+				for (int y = 0; y < _testRoomHeight; y++)
+				{
+					// skapa en ny tile för varje position i 2dmatrix
+					// för att få ut en matrix från en endimensionell array med Width:
+					// y * Width + x
+					_tiles[y * Width + x] = new TileFloor(); 
+				}
+			}
+		}
+
+		private static void CreateWalls()
+		{
+			// array stor som mapsize
+			_tiles = new TileBase[Width * Height];
+			
+			// fyll med walls
+			// lär som "bas", vill inte ha nå null-skit från sadconsole
+			for (int i = 0; i < _tiles.Length; i++)
+			{
+				_tiles[i] = new TileWall();
+			}
 		}
 	}
 }
