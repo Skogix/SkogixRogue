@@ -1,0 +1,8 @@
+/media/D/projects/SkogixRogue/GameUI/bin/Debug/netcoreapp3.1/GameUI
+/media/D/projects/SkogixRogue/GameUI/bin/Debug/netcoreapp3.1/GameUI.dll
+/media/D/projects/SkogixRogue/GameUI/bin/Debug/netcoreapp3.1/GameUI.pdb
+/media/D/projects/SkogixRogue/GameUI/obj/Debug/netcoreapp3.1/GameUI.csprojAssemblyReference.cache
+/media/D/projects/SkogixRogue/GameUI/obj/Debug/netcoreapp3.1/GameUI.AssemblyInfoInputs.cache
+/media/D/projects/SkogixRogue/GameUI/obj/Debug/netcoreapp3.1/GameUI.AssemblyInfo.cs
+/media/D/projects/SkogixRogue/GameUI/obj/Debug/netcoreapp3.1/GameUI.dll
+/media/D/projects/SkogixRogue/GameUI/obj/Debug/netcoreapp3.1/GameUI.pdb
