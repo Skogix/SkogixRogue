@@ -99,7 +99,7 @@ namespace GameUI
 		private static void CheckKeyboard()
 		{
 			// lättare att skapa en teleport än att faktiskt se till att man spawnar i 
-			// ett rum!
+			// ett rum
 			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Space))
 			{
 				Random random = new Random();
@@ -108,25 +108,21 @@ namespace GameUI
 			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
 			{
 				player.MoveBy(new Point(0, -1));
-				// CenterOnActor(player);
 			}
 
 			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
 			{
 				player.MoveBy(new Point(0, 1));
-				// CenterOnActor(player);
 			}
 
 			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
 			{
 				player.MoveBy(new Point(-1, 0));
-				// CenterOnActor(player);
 			}
 
 			if (Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
 			{
 				player.MoveBy(new Point(1, 0));
-				// CenterOnActor(player);
 			}
 		}
 
