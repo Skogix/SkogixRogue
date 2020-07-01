@@ -35,7 +35,7 @@ namespace GameUI
 		public void Init()
 		{
 			CreateConsoles();
-			// CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Game Map");
+			CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Game Map");
 		}
 
 		// gör ett window som håller en map-console och visar
@@ -120,23 +120,32 @@ namespace GameUI
 				GameLoop.World.Player.MoveTo(new Point(
 					random.Next(GameLoop.GameWidth - 1)
 					, random.Next(GameLoop.GameHeight - 1)));
+				CenterOnActor(GameLoop.World.Player);
 			}
 
-			if (Global.KeyboardState.IsKeyPressed(Keys
-				.Up))
+			if (Global.KeyboardState.IsKeyPressed(Keys.Up))
+			{
 				GameLoop.World.Player.MoveBy(new Point(0, -1));
+				CenterOnActor(GameLoop.World.Player);
+			}
 
-			if (Global.KeyboardState.IsKeyPressed(Keys
-				.Down))
+			if (Global.KeyboardState.IsKeyPressed(Keys.Down))
+			{
 				GameLoop.World.Player.MoveBy(new Point(0, 1));
+				CenterOnActor(GameLoop.World.Player);
+			}
 
-			if (Global.KeyboardState.IsKeyPressed(Keys
-				.Left))
+			if (Global.KeyboardState.IsKeyPressed(Keys.Left))
+			{
 				GameLoop.World.Player.MoveBy(new Point(-1, 0));
+				CenterOnActor(GameLoop.World.Player);
+			}
 
-			if (Global.KeyboardState.IsKeyPressed(Keys
-				.Right))
+			if (Global.KeyboardState.IsKeyPressed(Keys.Right))
+			{
 				GameLoop.World.Player.MoveBy(new Point(1, 0));
+				CenterOnActor(GameLoop.World.Player);
+			}
 		}
 	}
 }
