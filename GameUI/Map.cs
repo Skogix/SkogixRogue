@@ -5,12 +5,6 @@ namespace GameUI
 	// sparar och ändrar på tiledata
 	public class Map
 	{
-		// har alla tiles
-		public TileBase[] Tiles { get; set; }
-
-		public int Width { get; set; }
-		public int Height { get; set; }
-		
 		// bygg mappen
 		public Map(int width, int height)
 		{
@@ -19,7 +13,13 @@ namespace GameUI
 			Tiles = new TileBase[width * height];
 		}
 
-		
+		// har alla tiles
+		public TileBase[] Tiles { get; set; }
+
+		public int Width { get; set; }
+		public int Height { get; set; }
+
+
 		// kollar om actor försöker gå till en validtile
 		// returnar false om det är utanför mappen eller isblockingmove
 		public bool IsTileWalkable(Point location)

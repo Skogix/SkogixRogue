@@ -6,13 +6,13 @@ namespace GameUI
 	{
 		public TileFloor(
 			bool blocksMovement = false,
-			bool blocksLoS = false) 
-		     : base (
-					Color.DarkGray,
-					Color.Transparent,
-					'.',
-					blocksMovement,
-					blocksLoS)
+			bool blocksLoS = false)
+			: base(
+				Color.DarkGray,
+				Color.Transparent,
+				'.',
+				blocksMovement,
+				blocksLoS)
 		{
 			Name = "Floor";
 		}

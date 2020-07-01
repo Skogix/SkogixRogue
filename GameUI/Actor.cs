@@ -1,14 +1,10 @@
 using Microsoft.Xna.Framework;
-using SadConsole;
+using SadConsole.Entities;
 
 namespace GameUI
 {
-	public abstract class Actor : SadConsole.Entities.Entity
+	public abstract class Actor : Entity
 	{
-		// exempelattribut
-		public int Health { get; set; }
-		public int MaxHealth { get; set; }
-
 		protected Actor(
 			Color foreground,
 			Color background,
@@ -22,23 +18,25 @@ namespace GameUI
 			Animation.CurrentFrame[0].Background = background;
 			Animation.CurrentFrame[0].Glyph = glyph;
 		}
-		
+
+		// exempelattribut
+		public int Health { get; set; }
+		public int MaxHealth { get; set; }
+
 		// flyttar actor MED positionChange i x/y-dir
 		// returnar true om ok, annars false
 		public bool MoveBy(Point posChange)
 		{
 			// kolla mappen om vi kan gå
-			if (GameLoop.GameMap.IsTileWalkable(Position + posChange))
+			if (GameLoop.World.CurrentMap.IsTileWalkable(Position + posChange))
 			{
 				Position += posChange;
 				return true;
 			}
-			else
-			{
-				return false;
-			}
+
+			return false;
 		}
-		
+
 		// flyttar actor TILL newPos loc
 		// returnar true om ok, annars false
 		public bool MoveTo(Point newPos)
@@ -46,6 +44,5 @@ namespace GameUI
 			Position = newPos;
 			return true;
 		}
-		
 	}
 }
