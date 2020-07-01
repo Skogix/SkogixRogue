@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using SadConsole.Controls;
 
-namespace GameUI
+namespace GameUI.UI
 {
 	// ContainerConsole håller alla consoler som används och gör det
 	// enkelt att komma åt från ett ställe
@@ -16,9 +16,10 @@ namespace GameUI
 		// map-scrolling
 		// skapa och hålla reda på kontroller för ui-element
 		// hanterar inputs från tangentbord/mus(?) och ui
-		
+
 		public ScrollingConsole MapConsole;
 		public Window MapWindow;
+		public MessageLogWindow MessageLog;
 
 		public UIManager()
 		{
@@ -36,6 +37,49 @@ namespace GameUI
 		{
 			CreateConsoles();
 			CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Game Map");
+			MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
+			Children.Add(MessageLog);
+			MessageLog.Show();
+			MessageLog.Position = new Point(0, GameLoop.GameHeight / 2);
+
+			MessageLog.Add("Test 1");
+			MessageLog.Add("Test 1");
+			MessageLog.Add("Test 24123h");
+			MessageLog.Add("Test 1ihel");
+			MessageLog.Add("Test aoelurca1");
+			MessageLog.Add("Test cweaou1");
+			MessageLog.Add("Test aeouhns");
+			MessageLog.Add("Test 2341[");
+			MessageLog.Add("Test 24123h");
+			MessageLog.Add("Test 24123h");
+			MessageLog.Add("Test 24123h");
+			MessageLog.Add("Test 24123h");
+			MessageLog.Add("Test 24123h");
+			MessageLog.Add("Test 1ihel");
+			MessageLog.Add("Test aoelurca1");
+			MessageLog.Add("Test cweaou1");
+			MessageLog.Add("Test aeouhns");
+			MessageLog.Add("Test 2341[");
+			MessageLog.Add("Test 1ihel");
+			MessageLog.Add("Test aoelurca1");
+			MessageLog.Add("Test cweaou1");
+			MessageLog.Add("Test aeouhns");
+			MessageLog.Add("Test 2341[");
+			MessageLog.Add("Test 1ihel");
+			MessageLog.Add("Test aoelurca1");
+			MessageLog.Add("Test cweaou1");
+			MessageLog.Add("Test aeouhns");
+			MessageLog.Add("Test 2341[");
+			MessageLog.Add("Test 1ihel");
+			MessageLog.Add("Test aoelurca1");
+			MessageLog.Add("Test cweaou1");
+			MessageLog.Add("Test aeouhns");
+			MessageLog.Add("Test 2341[");
+			MessageLog.Add("Test 1ihel");
+			MessageLog.Add("Test aoelurca1");
+			MessageLog.Add("Test cweaou1");
+			MessageLog.Add("Test aeouhns");
+			MessageLog.Add("Test 2341[");
 		}
 
 		// gör ett window som håller en map-console och visar
@@ -87,12 +131,11 @@ namespace GameUI
 		public void CreateConsoles()
 		{
 			MapConsole = new ScrollingConsole(
-				GameLoop.World.CurrentMap.Width, 
-				GameLoop.World.CurrentMap.Height, 
-				Global.FontDefault, 
-				new Rectangle(0, 0, GameLoop.GameWidth, GameLoop.GameHeight), 
+				GameLoop.World.CurrentMap.Width,
+				GameLoop.World.CurrentMap.Height,
+				Global.FontDefault,
+				new Rectangle(0, 0, GameLoop.GameWidth, GameLoop.GameHeight),
 				GameLoop.World.CurrentMap.Tiles);
-
 		}
 
 		// centrerar viewporten på actor

@@ -1,13 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GameUI.UI;
+using Microsoft.Xna.Framework;
 using Game = SadConsole.Game;
 
 namespace GameUI
 {
 	internal class GameLoop
 	{
-		public const int GameWidth = 80;
+		public const int GameWidth = 120;
 
-		public const int GameHeight = 25;
+		public const int GameHeight = 60;
 
 		// managers
 		public static UIManager UIManager;
