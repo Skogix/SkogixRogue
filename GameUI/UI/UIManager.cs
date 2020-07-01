@@ -1,4 +1,5 @@
 using System;
+using GameUI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
@@ -36,50 +37,22 @@ namespace GameUI.UI
 		public void Init()
 		{
 			CreateConsoles();
-			CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Game Map");
-			MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
+			
+			
+			
+			MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Log");
 			Children.Add(MessageLog);
 			MessageLog.Show();
 			MessageLog.Position = new Point(0, GameLoop.GameHeight / 2);
 
-			MessageLog.Add("Test 1");
-			MessageLog.Add("Test 1");
-			MessageLog.Add("Test 24123h");
-			MessageLog.Add("Test 1ihel");
-			MessageLog.Add("Test aoelurca1");
-			MessageLog.Add("Test cweaou1");
-			MessageLog.Add("Test aeouhns");
-			MessageLog.Add("Test 2341[");
-			MessageLog.Add("Test 24123h");
-			MessageLog.Add("Test 24123h");
-			MessageLog.Add("Test 24123h");
-			MessageLog.Add("Test 24123h");
-			MessageLog.Add("Test 24123h");
-			MessageLog.Add("Test 1ihel");
-			MessageLog.Add("Test aoelurca1");
-			MessageLog.Add("Test cweaou1");
-			MessageLog.Add("Test aeouhns");
-			MessageLog.Add("Test 2341[");
-			MessageLog.Add("Test 1ihel");
-			MessageLog.Add("Test aoelurca1");
-			MessageLog.Add("Test cweaou1");
-			MessageLog.Add("Test aeouhns");
-			MessageLog.Add("Test 2341[");
-			MessageLog.Add("Test 1ihel");
-			MessageLog.Add("Test aoelurca1");
-			MessageLog.Add("Test cweaou1");
-			MessageLog.Add("Test aeouhns");
-			MessageLog.Add("Test 2341[");
-			MessageLog.Add("Test 1ihel");
-			MessageLog.Add("Test aoelurca1");
-			MessageLog.Add("Test cweaou1");
-			MessageLog.Add("Test aeouhns");
-			MessageLog.Add("Test 2341[");
-			MessageLog.Add("Test 1ihel");
-			MessageLog.Add("Test aoelurca1");
-			MessageLog.Add("Test cweaou1");
-			MessageLog.Add("Test aeouhns");
-			MessageLog.Add("Test 2341[");
+			MessageLog.Add("INIT");
+			
+			// ladda mapen in i mapconsole
+			LoadMap(GameLoop.World.CurrentMap);
+			
+			// nu när mapconsole är klar, bygg window
+			CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Map");
+			UseMouse = true;
 			
 			// starta spelet med kameran fokuserad på player
 			CenterOnActor(GameLoop.World.Player);
@@ -133,12 +106,24 @@ namespace GameUI.UI
 		// skapar alla child-consoles som vi hanterar
 		public void CreateConsoles()
 		{
+			// en tempconsole utan tiledata som senare blir replaceat via loadmap
+			MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
+		}
+		
+		// ladda en map in i mapconsole
+		private void LoadMap(Map map)
+		{
+			// ladda tiles
 			MapConsole = new ScrollingConsole(
 				GameLoop.World.CurrentMap.Width,
 				GameLoop.World.CurrentMap.Height,
 				Global.FontDefault,
 				new Rectangle(0, 0, GameLoop.GameWidth, GameLoop.GameHeight),
-				GameLoop.World.CurrentMap.Tiles);
+				map.Tiles);
+			
+			// synca alla entities
+			SyncMapEntities(map);
+			
 		}
 
 		// centrerar viewporten på actor
@@ -210,6 +195,41 @@ namespace GameUI.UI
 				GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
 				CenterOnActor(GameLoop.World.Player);
 			}
+		}
+		
+		// lägg till hela listan med entities som finns i World.Currentmaps entities spatialmap
+		// till mapconsole så dem kan drawas
+		private void SyncMapEntities(Map map)
+		{
+			// först rensa alla entities
+			MapConsole.Children.Clear();
+			
+			// dra in alla entities i bulk
+			// "Items" är whatever så länge de är IHasID
+			foreach (Entity entity in map.Entities.Items)
+			{
+				MapConsole.Children.Add(entity);
+			}
+			
+			// adda itemadded/removed-listener så mapconsoles entities är i sync
+			map.Entities.ItemAdded += OnMapEntityAdded;
+			map.Entities.ItemRemoved += OnMapEntityRemoved;
+		}
+		
+		
+		// event och listener-handlers fr att synca alla entities till mapconsole
+		// om något ändras så måste det ändras i både map och mapconsole, så synca
+		
+		// eventhandler för att ta bort en entity från mapconsole
+		public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<Entity> args)
+		{
+			MapConsole.Children.Remove(args.Item);
+		}
+		
+		// eventhandler för att lägga till en entity från mapconsole
+		public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args)
+		{
+			MapConsole.Children.Add(args.Item);
 		}
 	}
 }

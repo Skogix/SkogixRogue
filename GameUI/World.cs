@@ -1,4 +1,7 @@
+using System;
+using GameUI.Entities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
 using SadConsole.Components;
 
@@ -20,6 +23,7 @@ namespace GameUI
 		{
 			CreateMap();
 			CreatePlayer();
+			CreateMonsters();
 		}
 
 		// playerdata
@@ -46,6 +50,7 @@ namespace GameUI
 		private void CreatePlayer()
 		{
 			Player = new Player(Color.HotPink, Color.Transparent);
+			Player.Components.Add(new EntityViewSyncComponent());
 			
 			// sätt player på första tilen som inte är blockad
 			for (int i = 0; i < CurrentMap.Tiles.Length; i++)
@@ -56,9 +61,42 @@ namespace GameUI
 					Player.Position = Helpers.GetPointFromIndex(i, CurrentMap.Width);
 				}
 			}
+			CurrentMap.Add(Player);
+		}
 
-			// adda viewport sync-component till player
-			Player.Components.Add(new EntityViewSyncComponent());
+		// gör lite random monsters med random values
+		// och sätt ut dem på random ställen
+		private void CreateMonsters()
+		{
+			int numMonsters = 10;
+			Random random = new Random();
+			
+			// skapa monster och plocka en random position
+			// om position är blockad (typ vägg) så testa igen
+			for (int i = 0; i < numMonsters; i++)
+			{
+				int monsterPosition = 0;
+				Monster newMonster = new Monster(Color.Blue, Color.Transparent);
+				newMonster.Components.Add(new EntityViewSyncComponent());
+				while (CurrentMap.Tiles[monsterPosition].IsBlockingMove)
+				{
+					// plocka en random spot
+					monsterPosition = random.Next(0, CurrentMap.Width * CurrentMap.Height);
+				}
+				
+				// sätt lite randomvalues
+				newMonster.Defense = random.Next(0, 10);
+				newMonster.DefenseChance = random.Next(0, 50);
+				newMonster.Attack = random.Next(0, 10);
+				newMonster.AttackChance = random.Next(0, 50);
+				newMonster.Name = "Jagger";
+				
+				// sätt position
+				newMonster.Position = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Width);
+				CurrentMap.Add(newMonster);
+
+			}
+
 		}
 	}
 }
