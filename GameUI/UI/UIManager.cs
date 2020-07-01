@@ -80,6 +80,9 @@ namespace GameUI.UI
 			MessageLog.Add("Test cweaou1");
 			MessageLog.Add("Test aeouhns");
 			MessageLog.Add("Test 2341[");
+			
+			// starta spelet med kameran fokuserad på player
+			CenterOnActor(GameLoop.World.Player);
 		}
 
 		// gör ett window som håller en map-console och visar
@@ -155,6 +158,20 @@ namespace GameUI.UI
 		// skanna sadconsoles keyboardstate och gör shit beroende på knapp
 		private void CheckKeyboard()
 		{
+			// repeata sista commandet
+			if (Global.KeyboardState.IsKeyPressed(Keys.X))
+			{
+				GameLoop.CommandManager.RedoMoveActorBy();
+				CenterOnActor(GameLoop.World.Player);
+			}
+			
+			// undo sista commandet
+			if (Global.KeyboardState.IsKeyReleased(Keys.Z))
+			{
+				GameLoop.CommandManager.UndoMoveActorBy();
+				CenterOnActor(GameLoop.World.Player);
+			}
+			
 			// lättare att skapa en teleport än att faktiskt se till att man spawnar i 
 			// ett rum
 			if (Global.KeyboardState.IsKeyPressed(Keys.Space))
@@ -166,27 +183,31 @@ namespace GameUI.UI
 				CenterOnActor(GameLoop.World.Player);
 			}
 
+			// gå upp
 			if (Global.KeyboardState.IsKeyPressed(Keys.Up))
 			{
-				GameLoop.World.Player.MoveBy(new Point(0, -1));
+				GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
 				CenterOnActor(GameLoop.World.Player);
 			}
 
+			// gå ner
 			if (Global.KeyboardState.IsKeyPressed(Keys.Down))
 			{
-				GameLoop.World.Player.MoveBy(new Point(0, 1));
+				GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));
 				CenterOnActor(GameLoop.World.Player);
 			}
 
+			// gå vänster
 			if (Global.KeyboardState.IsKeyPressed(Keys.Left))
 			{
-				GameLoop.World.Player.MoveBy(new Point(-1, 0));
+				GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 0));
 				CenterOnActor(GameLoop.World.Player);
 			}
 
+			// gå höger
 			if (Global.KeyboardState.IsKeyPressed(Keys.Right))
 			{
-				GameLoop.World.Player.MoveBy(new Point(1, 0));
+				GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
 				CenterOnActor(GameLoop.World.Player);
 			}
 		}

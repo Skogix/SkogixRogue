@@ -1,4 +1,5 @@
-﻿using GameUI.UI;
+﻿using GameUI.Commands;
+using GameUI.UI;
 using Microsoft.Xna.Framework;
 using Game = SadConsole.Game;
 
@@ -13,6 +14,7 @@ namespace GameUI
 		// managers
 		public static UIManager UIManager;
 		public static World World;
+		public static CommandManager CommandManager;
 
 		private static void Main()
 		{
@@ -40,6 +42,7 @@ namespace GameUI
 		{
 			UIManager = new UIManager();
 			World = new World();
+			CommandManager = new CommandManager();
 
 			// skapa consolerna vi behöver
 			UIManager.Init();

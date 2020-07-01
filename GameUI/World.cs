@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using SadConsole;
 using SadConsole.Components;
 
 namespace GameUI
@@ -45,7 +46,16 @@ namespace GameUI
 		private void CreatePlayer()
 		{
 			Player = new Player(Color.HotPink, Color.Transparent);
-			Player.Position = new Point(20, 20);
+			
+			// sätt player på första tilen som inte är blockad
+			for (int i = 0; i < CurrentMap.Tiles.Length; i++)
+			{
+				if (CurrentMap.Tiles[i].IsBlockingMove == false)
+				{
+					// sätt players position på current pos
+					Player.Position = Helpers.GetPointFromIndex(i, CurrentMap.Width);
+				}
+			}
 
 			// adda viewport sync-component till player
 			Player.Components.Add(new EntityViewSyncComponent());
