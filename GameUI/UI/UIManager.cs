@@ -40,7 +40,7 @@ namespace GameUI.UI
 			
 			
 			
-			MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Log");
+			MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 5, "Log");
 			Children.Add(MessageLog);
 			MessageLog.Show();
 			MessageLog.Position = new Point(0, GameLoop.GameHeight / 2);
@@ -111,7 +111,7 @@ namespace GameUI.UI
 		}
 		
 		// ladda en map in i mapconsole
-		private void LoadMap(Map map)
+		private void LoadMap(Map.Map map)
 		{
 			// ladda tiles
 			MapConsole = new ScrollingConsole(
@@ -199,7 +199,7 @@ namespace GameUI.UI
 		
 		// lägg till hela listan med entities som finns i World.Currentmaps entities spatialmap
 		// till mapconsole så dem kan drawas
-		private void SyncMapEntities(Map map)
+		private void SyncMapEntities(Map.Map map)
 		{
 			// först rensa alla entities
 			MapConsole.Children.Clear();

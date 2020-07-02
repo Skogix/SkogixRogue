@@ -1,5 +1,7 @@
 using System;
 using GameUI.Entities;
+using GameUI.Map;
+using GoRogue;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
@@ -24,18 +26,19 @@ namespace GameUI
 			CreateMap();
 			CreatePlayer();
 			CreateMonsters();
+			CreateLoot();
 		}
 
 		// playerdata
 		public Player Player { get; set; }
 
 		// mapdata
-		public Map CurrentMap { get; set; }
+		public Map.Map CurrentMap { get; set; }
 
 		private void CreateMap()
 		{
 			_mapTiles = new TileBase[_mapWidth * _mapHeight];
-			CurrentMap = new Map(_mapWidth, _mapHeight);
+			CurrentMap = new Map.Map(_mapWidth, _mapHeight);
 			var mapGen = new MapGenerator();
 			CurrentMap = mapGen.GenerateMap(
 				_mapWidth,
@@ -97,6 +100,35 @@ namespace GameUI
 
 			}
 
+		}
+		
+		// skapa lite randomloot för testing
+		private void CreateLoot()
+		{
+			int numLoot = 20;
+			Random random = new Random();
+
+			for (int i = 0; i < numLoot; i++)
+			{
+				int lootPosition = 0;
+				Item newLoot = new Item(Color.HotPink, Color.Transparent, "Random loot", 'L', 2, 70);
+				
+				// lägg till komponent så position osv syncas till mappen
+				newLoot.Components.Add(new EntityViewSyncComponent());
+				
+				// försök skapa på lootpos, om fail försök tills det går
+				while (CurrentMap.Tiles[lootPosition].IsBlockingMove)
+				{
+					// random place på mappen
+					lootPosition = random.Next(0, CurrentMap.Width * CurrentMap.Height);
+				}
+				
+				// sätt positionen
+				newLoot.Position = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Width);
+				
+				// lägg till i MultipSpatialMap
+				CurrentMap.Add(newLoot);
+			}
 		}
 	}
 }

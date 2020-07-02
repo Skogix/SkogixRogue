@@ -16,7 +16,7 @@ namespace GameUI.Entities
 			Animation.CurrentFrame[0].Glyph = glyph;
 			
 			// skapa nytt UNIKT id
-			ID = Map.IDGenerator.UseID();
+			ID = Map.Map.IDGenerator.UseID();
 		}
 	}
 }

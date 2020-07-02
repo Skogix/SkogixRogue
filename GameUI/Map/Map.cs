@@ -2,7 +2,7 @@ using System.Linq;
 using GameUI.Entities;
 using Microsoft.Xna.Framework;
 
-namespace GameUI
+namespace GameUI.Map
 {
 	// sparar och ändrar på tiledata
 	public class Map

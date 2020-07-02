@@ -169,15 +169,51 @@ namespace GameUI.Commands
 		{
 			// ta bort entityn från currentmap
 			GameLoop.World.CurrentMap.Remove(defender);
+			
+			// death message
+			StringBuilder deathMessage = new StringBuilder($"{defender.Name} died");
+			
+			// dumpa inventory
+			if (defender.Inventory.Count > 0)
+			{
+				deathMessage.AppendFormat(" and dropped: ");
 
-			if (defender is Player)
-			{
-				GameLoop.UIManager.MessageLog.Add($" {defender.Name} was killed.");
+				foreach (Item item in defender.Inventory)
+				{
+					// sätt position där items droppas till defender.position
+					item.Position = defender.Position;
+					
+					// lägg till i multispatialmap så den visas
+					GameLoop.World.CurrentMap.Add(item);
+					
+					// lägg till item i deathmessage
+					deathMessage.Append(item.Name + ", ");
+				}
+				
+				// rensa inventoryt
+				defender.Inventory.Clear();
 			}
-			else if (defender is Monster)
+			else
 			{
-				GameLoop.UIManager.MessageLog.Add($"{defender.Name} died and dropped {defender.Gold} gold.");
+				// har ingen loot så visa inget
+				deathMessage.Append(".");
 			}
+			
+			// removea actor
+			GameLoop.World.CurrentMap.Remove(defender);
+			
+			// visa deathmessage i messagelog
+			GameLoop.UIManager.MessageLog.Add(deathMessage.ToString());
+		}
+		
+		// försök plocka upp ett item och lägga till i inventory
+		public void Pickup(Actor actor, Item item)
+		{
+			// lägg till item och sen destroy/hide från multispatialmap
+			actor.Inventory.Add(item);
+			GameLoop.UIManager.MessageLog.Add($"{actor.Name} picked up {item.Name}");
+			// förstör den egentligen inte utan bara tar bort den från mapen
+			item.Destroy();
 		}
 	}
 }

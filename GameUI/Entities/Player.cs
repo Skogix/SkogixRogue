@@ -7,6 +7,7 @@ namespace GameUI.Entities
 		// skapar spelaren
 		public Player(Color foreground, Color background) : base(foreground, background, '@')
 		{
+			Health = 100;
 			Attack = 10;
 			AttackChance = 50;
 			Defense = 5;

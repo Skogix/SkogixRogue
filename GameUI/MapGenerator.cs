@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameUI.Map;
 using Microsoft.Xna.Framework;
 using Rectangle = GoRogue.Rectangle;
 
@@ -9,9 +10,9 @@ namespace GameUI
 	// https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
 	public class MapGenerator
 	{
-		private Map _map;
+		private Map.Map _map;
 
-		public Map GenerateMap(
+		public Map.Map GenerateMap(
 			int mapWidth,
 			int mapHeight,
 			int maxRooms,
@@ -20,7 +21,7 @@ namespace GameUI
 		{
 			var random = new Random();
 			// skapa en top map
-			_map = new Map(mapWidth, mapHeight);
+			_map = new Map.Map(mapWidth, mapHeight);
 
 			// lista med rum såhär långt
 			// Rectangle från GoRogue

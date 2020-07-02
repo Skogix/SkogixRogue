@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using GoRogue;
 using Microsoft.Xna.Framework;
 
 namespace GameUI.Entities
@@ -31,22 +33,36 @@ namespace GameUI.Entities
 		public int DefenseChance { get; set; }
 		public int Gold { get; set; }
 		
+		public List<Item> Inventory = new List<Item>();
+		
 
 		// flyttar actor MED positionChange i x/y-dir
 		// returnar true om ok, annars false
-		public bool MoveBy(Point posChange)
+		public bool MoveBy(Point positionChange)
 		{
 			// kolla mappen om vi kan gå
-			if (GameLoop.World.CurrentMap.IsTileWalkable(Position + posChange))
+			if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
 			{
+				// ToDo: Flytta all gamelogic från moveby, refactor plz
+				Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
+				Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
+				
+				
 				// om det står ett monster där, FIGHT!
-				Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + posChange);
 				if (monster != null)
 				{
 					GameLoop.CommandManager.Attack(this, monster);
 					return true;
 				}
-				Position += posChange;
+				
+				// om det är ett item där, plocka upp
+				else if (item != null)
+				{
+					GameLoop.CommandManager.Pickup(this, item);
+					return true;
+				}
+
+				Position += positionChange;
 				return true;
 			}
 
