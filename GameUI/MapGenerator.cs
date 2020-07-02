@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GameUI.Map;
+using GameUI.Map.Tiles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Rectangle = GoRogue.Rectangle;
 
 namespace GameUI
@@ -10,6 +12,7 @@ namespace GameUI
 	// https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
 	public class MapGenerator
 	{
+		Random random = new Random();
 		private Map.Map _map;
 
 		public Map.Map GenerateMap(
@@ -19,7 +22,6 @@ namespace GameUI
 			int minRoomSize,
 			int maxRoomSize)
 		{
-			var random = new Random();
 			// skapa en top map
 			_map = new Map.Map(mapWidth, mapHeight);
 
@@ -81,6 +83,12 @@ namespace GameUI
 				}
 			}
 
+			// skapa dörrar till tunnlarna
+			foreach (Rectangle room in Rooms)
+			{
+				CreateDoor(room);
+			}
+			
 			// spotta ut en hel karta
 			return _map;
 		}
@@ -229,6 +237,77 @@ namespace GameUI
 		private void CreateFloor(Point location)
 		{
 			_map.Tiles[location.ToIndex(_map.Width)] = new TileFloor();
+		}
+
+		// försöker skapa en dörr i en rektangels perimeter
+		// läs igenom hela perimetern och kolla om det är en öppning
+		// när en floor kommer så skapa en stängd olåst dörr
+		private void CreateDoor(Rectangle room)
+		{
+			List<Point> borderCells = GetBorderCellLocations(room);
+			
+			// gå igenom hela listan
+			foreach (Point location in borderCells)
+			{
+				int locationIndex = location.ToIndex(_map.Width);
+				if (IsPotentialDoor(location))
+				{
+					// skapa en ny drr
+					TileDoor newDoor = new TileDoor(false, false);
+					_map.Tiles[locationIndex] = newDoor;
+				}
+			}
+		}
+		
+		// ser om en location kan vara en dörr
+		// returnerar false om isblockingmove == true
+		private bool IsPotentialDoor(Point location)
+		{
+			// om location inte är walkable så är det troligen en vägg och inte
+			// en plats för en dörr
+			int locationIndex = location.ToIndex(_map.Width);
+			if (_map.Tiles[locationIndex] != null && _map.Tiles[locationIndex] is TileWall)
+			{
+				return false;
+			}
+			
+			// sparar alla grannceller
+			Point right = new Point(location.X + 1, location.Y);
+			Point left = new Point(location.X - 1, location.Y);
+			Point top = new Point(location.X, location.Y - 1);
+			Point bottom = new Point(location.X, location.Y + 1);
+			
+			// kolla om någon av grannarna är en dörr, då vill vi inte göra en
+			if (
+				_map.GetTileAt<TileDoor>(location.X, location.Y) != null ||
+				_map.GetTileAt<TileDoor>(right.X, right.Y) != null ||
+				_map.GetTileAt<TileDoor>(left.X, left.Y) != null ||
+				_map.GetTileAt<TileDoor>(top.X, top.Y) != null ||
+				_map.GetTileAt<TileDoor>(bottom.X, bottom.Y) != null)
+			{
+				return false;
+			}
+			
+			// om allt annat är ok, se till att den placeras efter en horisontell vägg
+			if (
+				!_map.Tiles[right.ToIndex(_map.Width)].IsBlockingMove &&
+				!_map.Tiles[left.ToIndex(_map.Width)].IsBlockingMove &&
+				_map.Tiles[top.ToIndex(_map.Width)].IsBlockingMove &&
+				_map.Tiles[bottom.ToIndex(_map.Width)].IsBlockingMove)
+			{
+				return true;
+			}
+			// eller att den är i en vertikal vägg
+			if (
+				_map.Tiles[right.ToIndex(_map.Width)].IsBlockingMove &&
+				_map.Tiles[left.ToIndex(_map.Width)].IsBlockingMove &&
+				!_map.Tiles[top.ToIndex(_map.Width)].IsBlockingMove &&
+				!_map.Tiles[bottom.ToIndex(_map.Width)].IsBlockingMove)
+			{
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

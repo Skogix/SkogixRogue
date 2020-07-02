@@ -1,4 +1,5 @@
 using System.Drawing;
+using SadConsole.Components;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace GameUI.Entities
@@ -17,6 +18,8 @@ namespace GameUI.Entities
 			
 			// skapa nytt UNIKT id
 			ID = Map.Map.IDGenerator.UseID();
+			// adda alltid component viewsync så scrollingconsole alltid trackar
+			Components.Add(new EntityViewSyncComponent());
 		}
 	}
 }

@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using SadConsole;
 
-namespace GameUI.Map
+namespace GameUI.Map.Tiles
 {
 	// abstract base class, inga egna object
 	public abstract class TileBase : Cell

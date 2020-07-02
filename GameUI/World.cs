@@ -1,6 +1,7 @@
 using System;
 using GameUI.Entities;
 using GameUI.Map;
+using GameUI.Map.Tiles;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,6 +12,8 @@ namespace GameUI
 {
 	public class World
 	{
+		Random random = new Random();
+		
 		// faktiskt mapstorleken
 		private static readonly int _mapWidth = 100;
 		private static readonly int _mapHeight = 100;
@@ -53,7 +56,6 @@ namespace GameUI
 		private void CreatePlayer()
 		{
 			Player = new Player(Color.HotPink, Color.Transparent);
-			Player.Components.Add(new EntityViewSyncComponent());
 			
 			// sätt player på första tilen som inte är blockad
 			for (int i = 0; i < CurrentMap.Tiles.Length; i++)
@@ -72,7 +74,6 @@ namespace GameUI
 		private void CreateMonsters()
 		{
 			int numMonsters = 10;
-			Random random = new Random();
 			
 			// skapa monster och plocka en random position
 			// om position är blockad (typ vägg) så testa igen
@@ -80,7 +81,6 @@ namespace GameUI
 			{
 				int monsterPosition = 0;
 				Monster newMonster = new Monster(Color.Blue, Color.Transparent);
-				newMonster.Components.Add(new EntityViewSyncComponent());
 				while (CurrentMap.Tiles[monsterPosition].IsBlockingMove)
 				{
 					// plocka en random spot
@@ -106,7 +106,6 @@ namespace GameUI
 		private void CreateLoot()
 		{
 			int numLoot = 20;
-			Random random = new Random();
 
 			for (int i = 0; i < numLoot; i++)
 			{
@@ -114,7 +113,6 @@ namespace GameUI
 				Item newLoot = new Item(Color.HotPink, Color.Transparent, "Random loot", 'L', 2, 70);
 				
 				// lägg till komponent så position osv syncas till mappen
-				newLoot.Components.Add(new EntityViewSyncComponent());
 				
 				// försök skapa på lootpos, om fail försök tills det går
 				while (CurrentMap.Tiles[lootPosition].IsBlockingMove)

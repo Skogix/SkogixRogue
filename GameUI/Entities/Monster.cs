@@ -5,9 +5,9 @@ namespace GameUI.Entities
 {
 	public class Monster : Actor
 	{
+		Random random = new Random();
 		public Monster(Color foreground, Color background) : base(foreground, background, 'M')
 		{
-			Random random = new Random();
 			int goldLootNum = random.Next(1, 5);
 
 			for (int i = 0; i < goldLootNum; i++)

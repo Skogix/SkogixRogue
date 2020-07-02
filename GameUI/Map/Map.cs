@@ -1,6 +1,8 @@
 using System.Linq;
 using GameUI.Entities;
+using GameUI.Map.Tiles;
 using Microsoft.Xna.Framework;
+using SadConsole;
 
 namespace GameUI.Map
 {
@@ -69,9 +71,25 @@ namespace GameUI.Map
 		
 		// när en entitys .Moved-value ändras, trigga den här eventhandlern
 		// vilket uppdaterar currentPos i SpatialMap
-		private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args)
+		private void OnEntityMoved(object sender, SadConsole.Entities.Entity.EntityMovedEventArgs args)
 		{
 			Entities.Move(args.Entity as Entity, args.Entity.Position);
+		}
+		
+		// kolla om en tile är på en viss position, och om den existerar så returna den
+		// accepterar enkla x/y-koordinater
+		public T GetTileAt<T>(int x, int y) where T : TileBase
+		{
+			int locationIndex = Helpers.GetIndexFromPoint(x, y, Width);
+			
+			// se till att index är innanför mappen
+			if (locationIndex <= Width * Height && locationIndex >= 0)
+			{
+				if (Tiles[locationIndex] is T)
+					return (T) Tiles[locationIndex];
+				else return null;
+			}
+			else return null;
 		}
 	}
 }

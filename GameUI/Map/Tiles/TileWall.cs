@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace GameUI.Map
+namespace GameUI.Map.Tiles
 {
 	public class TileWall : TileBase
 	{
