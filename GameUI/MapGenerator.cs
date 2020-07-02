@@ -120,9 +120,9 @@ namespace GameUI
 		private void CreateRoom(Rectangle room)
 		{
 			// lägg golv i mitten (exklusive perimetern)
-			for (var x = room.MinExtentX + 1; x < room.MaxExtentX - 1; x++)
+			for (var x = room.MinExtentX + 1; x < room.MaxExtentX; x++)
 			{
-				for (var y = room.MinExtentY + 1; y < room.MaxExtentY - 1; y++)
+				for (var y = room.MinExtentY + 1; y < room.MaxExtentY; y++)
 					CreateFloor(new Point(x, y));
 			}
 

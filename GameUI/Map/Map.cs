@@ -91,5 +91,10 @@ namespace GameUI.Map
 			}
 			else return null;
 		}
+
+		public T GetTileAt<T>(Point location) where T : TileBase
+		{
+			return GetTileAt<T>(location.X, location.Y);
+		}
 	}
 }

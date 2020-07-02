@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GameUI.Map.Tiles;
 using GoRogue;
 using Microsoft.Xna.Framework;
 
@@ -61,9 +62,24 @@ namespace GameUI.Entities
 					GameLoop.CommandManager.Pickup(this, item);
 					return true;
 				}
-
+				
 				Position += positionChange;
 				return true;
+			}
+			// situationer där vi har tiles som kan bli useade men inte walkade
+			else
+			{
+				// kolla om det finns en dörr och i så fall försök usea
+				TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+				if (door != null)
+				{
+					GameLoop.CommandManager.UseDoor(this, door);
+					// öppna som ett move eller öppna OCH gå dit?
+					Position += positionChange;
+					return true;
+				}
+
+				return false;
 			}
 
 			return false;

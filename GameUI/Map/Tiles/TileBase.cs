@@ -11,7 +11,7 @@ namespace GameUI.Map.Tiles
 		// movement och LoS
 		public bool IsBlockingMove;
 
-		protected string Name;
+		public string Name;
 
 		// varje tilebase har en foreground/background-color och en glyph/token
 

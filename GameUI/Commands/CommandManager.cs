@@ -1,8 +1,10 @@
 using GameUI.Entities;
 using Microsoft.Xna.Framework;
 using System.Text;
+using GameUI.Map.Tiles;
 // gorogues dice-"emulator"
 using GoRogue.DiceNotation;
+using MonoGame.Framework.Utilities;
 
 namespace GameUI.Commands
 {
@@ -214,6 +216,20 @@ namespace GameUI.Commands
 			GameLoop.UIManager.MessageLog.Add($"{actor.Name} picked up {item.Name}");
 			// förstör den egentligen inte utan bara tar bort den från mapen
 			item.Destroy();
+		}
+
+		// försök öppna en dörr
+		public void UseDoor(Actor actor, TileDoor door)
+		{
+			if (door.Locked)
+			{
+				// ToDo: nycklar
+			}
+			else if (!door.Locked && !door.IsOpen)
+			{
+				door.Open();
+				GameLoop.UIManager.MessageLog.Add($"{actor.Name} opened a {door.Name}");
+			}
 		}
 	}
 }
